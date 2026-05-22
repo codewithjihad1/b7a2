@@ -1,0 +1,38 @@
+
+Method -> GET - Time -> 1779428227063 - URL -> /
+
+Method -> GET - Time -> 1779428227168 - URL -> /favicon.ico
+
+Method -> GET - Time -> 1779428361694 - URL -> /users
+
+Method -> POST - Time -> 1779429043092 - URL -> /auth/signup
+
+Method -> POST - Time -> 1779429671329 - URL -> /auth/signup
+
+Method -> POST - Time -> 1779429713999 - URL -> /auth/signup
+
+Method -> POST - Time -> 1779429715301 - URL -> /auth/signup
+
+Method -> POST - Time -> 1779429716573 - URL -> /auth/signup
+
+Method -> POST - Time -> 1779429733145 - URL -> /api/auth/signup
+
+Method -> POST - Time -> 1779429935908 - URL -> /api/auth/signup
+
+Method -> POST - Time -> 1779429948386 - URL -> /api/auth/signup
+
+Method -> POST - Time -> 1779429998654 - URL -> /api/auth/signup
+
+Method -> POST - Time -> 1779430042353 - URL -> /api/auth/signup
+
+Method -> POST - Time -> 1779430730860 - URL -> /api/auth/signup
+
+Method -> POST - Time -> 1779431284246 - URL -> /api/auth/login
+
+Method -> POST - Time -> 1779431306024 - URL -> /api/auth/login
+
+Method -> POST - Time -> 1779431432914 - URL -> /api/auth/login
+
+Method -> POST - Time -> 1779431477343 - URL -> /api/auth/login
+
+Method -> POST - Time -> 1779431788755 - URL -> /api/auth/login

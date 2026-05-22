@@ -3,6 +3,7 @@ import cors from 'cors';
 import express, { type Application, type Request, type Response } from 'express';
 import globalErrorHandler from './middleware/globalErrorHandler';
 import logger from './middleware/logger';
+import { authRoute } from './modules/auth';
 const app: Application = express();
 
 app.use(CookieParser());
@@ -18,16 +19,13 @@ app.use(
 );
 
 app.get('/', (req: Request, res: Response) => {
-    //res.send("Hello World!");
     res.status(200).json({
         message: 'Express Server',
         author: 'Next Level',
     });
 });
 
-// app.use('/api/users', userRoute);
-// app.use('/api/profile', profileRoute);
-// app.use('/api/auth', authRoute);
+app.use('/api/auth', authRoute);
 
 // Global Error Handling Middleware
 app.use(globalErrorHandler);
