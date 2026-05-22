@@ -20,20 +20,21 @@ export const initDB = async () => {
         `);
 
         await pool.query(`
-          CREATE TABLE IF NOT EXISTS issues (
-            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            title VARCHAR(150) NOT NULL,
-            description TEXT NOT NULL,
-            type ENUM('bug', 'feature_request') NOT NULL,
-            status ENUM('open', 'in_progress', 'resolved')
-                NOT NULL DEFAULT 'open',
-            reporter_id BIGINT UNSIGNED NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                ON UPDATE CURRENT_TIMESTAMP,
-            CONSTRAINT chk_description_length
-                CHECK (CHAR_LENGTH(description) >= 20)
-        )
+            CREATE TABLE IF NOT EXISTS issues (
+                id BIGSERIAL PRIMARY KEY,
+                title VARCHAR(150) NOT NULL,
+                description TEXT NOT NULL
+                    CHECK (CHAR_LENGTH(description) >= 20),
+                type VARCHAR(20) NOT NULL
+                    CHECK (type IN ('bug', 'feature_request')),
+                status VARCHAR(20) NOT NULL DEFAULT 'open'
+                    CHECK (status IN ('open', 'in_progress', 'resolved')),
+                reporter_id BIGINT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+                FOREIGN KEY (reporter_id) REFERENCES users(id)
+            )
         `);
 
         console.log('Database connected successfully!');
