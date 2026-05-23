@@ -8,3 +8,5 @@ postman
 dist
 
 logger.txt
+.vercel
+.env*.local
