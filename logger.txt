@@ -10,3 +10,39 @@ Method -> GET - Time -> 1779509629982 - URL -> /api/issues?sort=oldest
 Method -> GET - Time -> 1779509641053 - URL -> /api/issues?sort=newst
 
 Method -> GET - Time -> 1779509712191 - URL -> /api/issues?sort=newest
+
+Method -> GET - Time -> 1779510949889 - URL -> /api/issues/3
+
+Method -> GET - Time -> 1779510982637 - URL -> /api/issues/3
+
+Method -> GET - Time -> 1779510985878 - URL -> /api/issues/1
+
+Method -> GET - Time -> 1779511018284 - URL -> /api/issues?sort=newest
+
+Method -> GET - Time -> 1779511025512 - URL -> /api/issues?sort=oldest
+
+Method -> GET - Time -> 1779511034747 - URL -> /api/issues
+
+Method -> GET - Time -> 1779511096708 - URL -> /api/issues?type=feature_request
+
+Method -> GET - Time -> 1779511116327 - URL -> /api/issues?type=bug
+
+Method -> GET - Time -> 1779511126330 - URL -> /api/issues?status=in_progress
+
+Method -> GET - Time -> 1779511150338 - URL -> /api/issues
+
+Method -> GET - Time -> 1779511392434 - URL -> /api/issues
+
+Method -> POST - Time -> 1779511500234 - URL -> /api/auth/signup
+
+Method -> POST - Time -> 1779511538898 - URL -> /api/auth/login
+
+Method -> POST - Time -> 1779511559942 - URL -> /api/issues
+
+Method -> POST - Time -> 1779511635588 - URL -> /api/issues
+
+Method -> POST - Time -> 1779511762417 - URL -> /api/issues
+
+Method -> GET - Time -> 1779511778817 - URL -> /api/issues
+
+Method -> GET - Time -> 1779512017689 - URL -> /api/issues

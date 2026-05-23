@@ -16,13 +16,13 @@ type IssueRow = {
     description: string;
     type: IssueType;
     status: IssueStatus;
-    reporter_id: number;
+    reporter_id: number | string;
     created_at: Date;
     updated_at: Date;
 };
 
 type ReporterRow = {
-    id: number;
+    id: number | string;
     name: string;
     role: string;
 };
@@ -68,13 +68,13 @@ const getAllIssuesFromDB = async (params: GetAllIssuesParams) => {
         [reporterIds],
     );
 
-    const reporterMap = new Map<number, ReporterRow>();
+    const reporterMap = new Map<string, ReporterRow>();
     for (const reporter of reportersResult.rows) {
-        reporterMap.set(reporter.id, reporter);
+        reporterMap.set(String(reporter.id), reporter);
     }
 
     return issuesResult.rows.map((issue) => {
-        const reporter = reporterMap.get(issue.reporter_id);
+        const reporter = reporterMap.get(String(issue.reporter_id));
 
         return {
             id: issue.id,
@@ -84,7 +84,7 @@ const getAllIssuesFromDB = async (params: GetAllIssuesParams) => {
             status: issue.status,
             reporter: reporter
                 ? {
-                      id: reporter.id,
+                      id: Number(reporter.id),
                       name: reporter.name,
                       role: reporter.role,
                   }
