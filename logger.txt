@@ -46,3 +46,7 @@ Method -> POST - Time -> 1779511762417 - URL -> /api/issues
 Method -> GET - Time -> 1779511778817 - URL -> /api/issues
 
 Method -> GET - Time -> 1779512017689 - URL -> /api/issues
+
+Method -> GET - Time -> 1779512307242 - URL -> /api/issues/1
+
+Method -> GET - Time -> 1779512312183 - URL -> /api/issues/7

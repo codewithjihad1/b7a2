@@ -10,6 +10,21 @@ type GetAllIssuesParams = {
     status?: IssueStatus;
 };
 
+type IssueResponse = {
+    id: number;
+    title: string;
+    description: string;
+    type: IssueType;
+    status: IssueStatus;
+    reporter: {
+        id: number;
+        name: string;
+        role: string;
+    } | null;
+    created_at: Date;
+    updated_at: Date;
+};
+
 type IssueRow = {
     id: number;
     title: string;
@@ -46,8 +61,7 @@ const getAllIssuesFromDB = async (params: GetAllIssuesParams) => {
 
     const issuesResult = await pool.query<IssueRow>(
         `
-		SELECT id, title, description, type, status, reporter_id, created_at, updated_at
-		FROM issues
+		SELECT * FROM issues
 		${whereQuery}
 		ORDER BY created_at ${sortDirection}
 		`,
@@ -73,7 +87,7 @@ const getAllIssuesFromDB = async (params: GetAllIssuesParams) => {
         reporterMap.set(String(reporter.id), reporter);
     }
 
-    return issuesResult.rows.map((issue) => {
+    return issuesResult.rows.map((issue): IssueResponse => {
         const reporter = reporterMap.get(String(issue.reporter_id));
 
         return {
@@ -95,6 +109,50 @@ const getAllIssuesFromDB = async (params: GetAllIssuesParams) => {
     });
 };
 
+const getIssueByIdFromDB = async (id: number) => {
+    const issueResult = await pool.query<IssueRow>(
+        `
+        SELECT * FROM issues
+        WHERE id = $1
+        `,
+        [id],
+    );
+
+    if (issueResult.rows.length === 0) {
+        return null;
+    }
+
+    const issue = issueResult.rows[0]!;
+    const reporterResult = await pool.query<ReporterRow>(
+        `
+        SELECT id, name, role
+        FROM users
+        WHERE id = $1
+        `,
+        [issue.reporter_id],
+    );
+
+    const reporter = reporterResult.rows[0];
+
+    return {
+        id: issue.id,
+        title: issue.title,
+        description: issue.description,
+        type: issue.type,
+        status: issue.status,
+        reporter: reporter
+            ? {
+                  id: Number(reporter.id),
+                  name: reporter.name,
+                  role: reporter.role,
+              }
+            : null,
+        created_at: issue.created_at,
+        updated_at: issue.updated_at,
+    } satisfies IssueResponse;
+};
+
 export const issuesService = {
     getAllIssuesFromDB,
+    getIssueByIdFromDB,
 };

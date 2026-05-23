@@ -83,6 +83,39 @@ const getAllIssues = async (req: Request, res: Response) => {
     }
 };
 
+const getSingleIssue = async (req: Request, res: Response) => {
+    const issueId = Number(req.params.id);
+
+    if (!Number.isInteger(issueId) || issueId <= 0) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid issue id',
+        });
+    }
+
+    try {
+        const issue = await issuesService.getIssueByIdFromDB(issueId);
+
+        if (!issue) {
+            return res.status(404).json({
+                success: false,
+                message: 'Issue not found',
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: issue,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to fetch issue',
+            data: error,
+        });
+    }
+};
+
 const createIssue = async (req: Request, res: Response) => {
     const { title, description, type } = req.body;
 
@@ -113,4 +146,4 @@ const createIssue = async (req: Request, res: Response) => {
     }
 };
 
-export { createIssue, getAllIssues };
+export { createIssue, getAllIssues, getSingleIssue };
