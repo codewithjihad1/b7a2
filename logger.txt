@@ -50,3 +50,9 @@ Method -> GET - Time -> 1779512017689 - URL -> /api/issues
 Method -> GET - Time -> 1779512307242 - URL -> /api/issues/1
 
 Method -> GET - Time -> 1779512312183 - URL -> /api/issues/7
+
+Method -> PATCH - Time -> 1779512623026 - URL -> /api/issues/3
+
+Method -> PATCH - Time -> 1779512662106 - URL -> /api/issues/7
+
+Method -> PATCH - Time -> 1779512692979 - URL -> /api/issues/1

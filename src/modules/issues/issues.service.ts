@@ -10,6 +10,15 @@ type GetAllIssuesParams = {
     status?: IssueStatus;
 };
 
+type UpdateIssueParams = {
+    id: number;
+    userId: number;
+    role: string;
+    title?: string;
+    description?: string;
+    type?: IssueType;
+};
+
 type IssueResponse = {
     id: number;
     title: string;
@@ -34,6 +43,11 @@ type IssueRow = {
     reporter_id: number | string;
     created_at: Date;
     updated_at: Date;
+};
+
+type UserRow = {
+    id: number | string;
+    role: string;
 };
 
 type ReporterRow = {
@@ -152,7 +166,85 @@ const getIssueByIdFromDB = async (id: number) => {
     } satisfies IssueResponse;
 };
 
+const updateIssueInDB = async (params: UpdateIssueParams) => {
+    const issueResult = await pool.query<IssueRow>(
+        `
+        SELECT * FROM issues
+        WHERE id = $1
+        `,
+        [params.id],
+    );
+
+    if (issueResult.rows.length === 0) {
+        return null;
+    }
+
+    const issue = issueResult.rows[0]!;
+
+    if (params.role !== 'maintainer') {
+        if (String(issue.reporter_id) !== String(params.userId)) {
+            throw new Error('Forbidden');
+        }
+
+        if (issue.status !== 'open') {
+            throw new Error('Issue cannot be updated once it is not open');
+        }
+    }
+
+    const userResult = await pool.query<UserRow>(
+        `
+        SELECT id, role
+        FROM users
+        WHERE id = $1
+        `,
+        [params.userId],
+    );
+
+    if (userResult.rows.length === 0) {
+        throw new Error('Unauthorized');
+    }
+
+    const updateFields: string[] = [];
+    const values: Array<string> = [];
+
+    if (params.title !== undefined) {
+        updateFields.push(`title = $${values.length + 1}`);
+        values.push(params.title);
+    }
+
+    if (params.description !== undefined) {
+        updateFields.push(`description = $${values.length + 1}`);
+        values.push(params.description);
+    }
+
+    if (params.type !== undefined) {
+        updateFields.push(`type = $${values.length + 1}`);
+        values.push(params.type);
+    }
+
+    if (updateFields.length === 0) {
+        throw new Error('At least one field is required to update');
+    }
+
+    updateFields.push(`updated_at = CURRENT_TIMESTAMP`);
+
+    const updateValues = [...values, params.id];
+
+    const updatedIssue = await pool.query<IssueRow>(
+        `
+        UPDATE issues
+        SET ${updateFields.join(', ')}
+        WHERE id = $${updateValues.length}
+        RETURNING *
+        `,
+        updateValues,
+    );
+
+    return updatedIssue.rows[0] ?? null;
+};
+
 export const issuesService = {
     getAllIssuesFromDB,
     getIssueByIdFromDB,
+    updateIssueInDB,
 };

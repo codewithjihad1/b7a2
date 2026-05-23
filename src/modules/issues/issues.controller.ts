@@ -21,6 +21,10 @@ const getSingleQueryValue = (value: unknown): string | undefined => {
     return undefined;
 };
 
+const isValidIssueType = (value: unknown): value is IssueType => {
+    return value === 'bug' || value === 'feature_request';
+};
+
 const getAllIssues = async (req: Request, res: Response) => {
     const sort = getSingleQueryValue(req.query.sort) ?? 'newest';
     const type = getSingleQueryValue(req.query.type);
@@ -116,6 +120,86 @@ const getSingleIssue = async (req: Request, res: Response) => {
     }
 };
 
+const updateIssue = async (req: Request, res: Response) => {
+    const issueId = Number(req.params.id);
+    const { title, description, type } = req.body;
+
+    if (!Number.isInteger(issueId) || issueId <= 0) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid issue id',
+        });
+    }
+
+    if (title === undefined && description === undefined && type === undefined) {
+        return res.status(400).json({
+            success: false,
+            message: 'At least one field is required to update',
+        });
+    }
+
+    if (type !== undefined && !isValidIssueType(type)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid type value. Allowed: bug, feature_request',
+        });
+    }
+
+    const accessToken = req.headers.authorization;
+
+    if (!accessToken) {
+        return res.status(401).json({
+            success: false,
+            message: 'Unauthorized',
+        });
+    }
+
+    try {
+        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET as string) as IssuePayload;
+
+        const updatedIssue = await issuesService.updateIssueInDB({
+            id: issueId,
+            userId: Number(decoded.id),
+            role: decoded.role,
+            title,
+            description,
+            type,
+        });
+
+        if (!updatedIssue) {
+            return res.status(404).json({
+                success: false,
+                message: 'Issue not found',
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Issue updated successfully',
+            data: updatedIssue,
+        });
+    } catch (error: any) {
+        if (error.message === 'Forbidden') {
+            return res.status(403).json({
+                success: false,
+                message: 'Forbidden',
+            });
+        }
+
+        if (error.message === 'Issue cannot be updated once it is not open') {
+            return res.status(403).json({
+                success: false,
+                message: 'Contributors can only update their own open issues',
+            });
+        }
+
+        return res.status(401).json({
+            success: false,
+            message: 'Unauthorized',
+        });
+    }
+};
+
 const createIssue = async (req: Request, res: Response) => {
     const { title, description, type } = req.body;
 
@@ -146,4 +230,4 @@ const createIssue = async (req: Request, res: Response) => {
     }
 };
 
-export { createIssue, getAllIssues, getSingleIssue };
+export { createIssue, getAllIssues, getSingleIssue, updateIssue };
