@@ -32,9 +32,9 @@ const createIssue = async (req: Request, res: Response) => {
             [title, description, type, verifyToken.id, 'open'],
         );
 
-        res.status(201).json({ message: 'Issue created successfully', data: result.rows[0] });
+        res.status(201).json({ success: true, message: 'Issue created successfully', data: result.rows[0] });
     } catch (err) {
-        return res.status(401).json({ error: 'Invalid or missing token', data: err });
+        return res.status(401).json({ success: false, message: 'Issue creation failed', data: err });
     }
 };
 

@@ -168,3 +168,13 @@ Method -> POST - Time -> 1779453031954 - URL -> /api/auth/signup
 Method -> POST - Time -> 1779453058933 - URL -> /api/auth/login
 
 Method -> POST - Time -> 1779453086625 - URL -> /api/issues
+
+Method -> POST - Time -> 1779453390772 - URL -> /api/issues
+
+Method -> POST - Time -> 1779453415100 - URL -> /api/issues
+
+Method -> POST - Time -> 1779453600486 - URL -> /api/issues
+
+Method -> POST - Time -> 1779508285229 - URL -> /api/issues?sort=newest
+
+Method -> GET - Time -> 1779508300304 - URL -> /api/issues?sort=newest
